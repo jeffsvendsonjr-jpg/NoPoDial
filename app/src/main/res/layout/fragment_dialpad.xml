@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/text_dial_display"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="34sp"
+        android:singleLine="true"
+        android:ellipsize="start" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button android:id="@+id/btn_1" style="@style/DialKey" android:text="1" />
+        <Button android:id="@+id/btn_2" style="@style/DialKey" android:text="2" />
+        <Button android:id="@+id/btn_3" style="@style/DialKey" android:text="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button android:id="@+id/btn_4" style="@style/DialKey" android:text="4" />
+        <Button android:id="@+id/btn_5" style="@style/DialKey" android:text="5" />
+        <Button android:id="@+id/btn_6" style="@style/DialKey" android:text="6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button android:id="@+id/btn_7" style="@style/DialKey" android:text="7" />
+        <Button android:id="@+id/btn_8" style="@style/DialKey" android:text="8" />
+        <Button android:id="@+id/btn_9" style="@style/DialKey" android:text="9" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button android:id="@+id/btn_star" style="@style/DialKey" android:text="*" />
+        <Button android:id="@+id/btn_0" style="@style/DialKey" android:text="0" />
+        <Button android:id="@+id/btn_hash" style="@style/DialKey" android:text="#" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/button_call"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginEnd="8dp"
+            android:text="@string/action_call_now" />
+
+        <Button
+            android:id="@+id/button_backspace"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/backspace" />
+    </LinearLayout>
+</LinearLayout>

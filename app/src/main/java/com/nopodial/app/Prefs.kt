@@ -14,15 +14,18 @@ object Prefs {
     const val KEY_ENABLED = "enabled"
     const val KEY_MESSAGE = "apology_message"
     const val KEY_MAX_DURATION_SEC = "max_duration_sec"
+    const val KEY_NOTE_PROMPT = "note_prompt_enabled"
 
     // Transient call-session state
     const val KEY_LAST_PHONE_STATE = "last_phone_state"
     const val KEY_CALL_IS_INCOMING = "call_is_incoming"
     const val KEY_OUTGOING_START_MS = "outgoing_start_ms"
+    const val KEY_CALL_START_MS = "call_start_ms"
     const val KEY_SCREEN_WAS_OFF = "screen_was_off"
     const val KEY_DEVICE_WAS_LOCKED = "device_was_locked"
     const val KEY_PROXIMITY_COVERED = "proximity_covered"
     const val KEY_LAST_HANDLED_CALLLOG_ID = "last_handled_calllog_id"
+    const val KEY_LAST_PROMPTED_CALLLOG_ID = "last_prompted_calllog_id"
 
     const val DEFAULT_MAX_DURATION_SEC = 20
 
@@ -39,10 +42,15 @@ object Prefs {
     fun maxDurationSec(context: Context): Int =
         get(context).getInt(KEY_MAX_DURATION_SEC, DEFAULT_MAX_DURATION_SEC)
 
+    /** The "add a note?" prompt after calls — the journal's heartbeat, on by default. */
+    fun notePromptEnabled(context: Context): Boolean =
+        get(context).getBoolean(KEY_NOTE_PROMPT, true)
+
     fun clearCallSession(context: Context) {
         get(context).edit()
             .remove(KEY_CALL_IS_INCOMING)
             .remove(KEY_OUTGOING_START_MS)
+            .remove(KEY_CALL_START_MS)
             .remove(KEY_SCREEN_WAS_OFF)
             .remove(KEY_DEVICE_WAS_LOCKED)
             .remove(KEY_PROXIMITY_COVERED)

@@ -18,4 +18,54 @@
     <string name="notif_channel_name">Apologies sent</string>
     <string name="notif_title">Pocket dial cleaned up</string>
     <string name="notif_text">Apology SMS sent to %1$s</string>
+
+    <!-- Journal shell -->
+    <string name="nav_recents">Recents</string>
+    <string name="nav_contacts">Contacts</string>
+    <string name="nav_dialpad">Dialpad</string>
+    <string name="nav_followups">Follow-ups</string>
+    <string name="settings_title">Pocket-dial settings</string>
+    <string name="enable_note_prompt">Prompt for a note after calls</string>
+    <string name="search_hint">Search calls and notes</string>
+    <string name="empty_recents">No recent calls yet</string>
+    <string name="empty_recents_no_permission">Grant call log access to see your recent calls</string>
+    <string name="empty_contacts">No contacts with phone numbers</string>
+    <string name="empty_contacts_no_permission">Grant contacts access to see your contacts</string>
+    <string name="empty_followups">No pending follow-ups. Promises kept!</string>
+    <string name="empty_notes">No notes for this contact yet</string>
+    <string name="call_incoming">Incoming</string>
+    <string name="call_outgoing">Outgoing</string>
+    <string name="call_missed">Missed</string>
+    <string name="call_rejected">Rejected</string>
+    <string name="call_other">Call</string>
+    <string name="backspace">⌫</string>
+
+    <!-- Note editor -->
+    <string name="note_prompt_channel">Call notes</string>
+    <string name="note_prompt_title">Add a note about this call?</string>
+    <string name="note_prompt_text">Call with %1$s just ended</string>
+    <string name="note_editor_title">Call note</string>
+    <string name="note_header_call">Call with %1$s · %2$s</string>
+    <string name="note_header_plain">Note for %1$s</string>
+    <string name="hint_note_body">What happened? What did you promise?</string>
+    <string name="save_note">Save note</string>
+    <string name="note_saved">Note saved</string>
+    <string name="error_empty_note">Write something first</string>
+
+    <!-- Reminders -->
+    <string name="remind_label">Remind me to call back</string>
+    <string name="remind_1h">In 1 hour</string>
+    <string name="remind_tomorrow">Tomorrow 9:00</string>
+    <string name="remind_pick">Pick time…</string>
+    <string name="reminder_set">Reminder set for %1$s</string>
+    <string name="default_reminder_message">Call back</string>
+    <string name="reminder_channel">Follow-up reminders</string>
+    <string name="reminder_title">Call %1$s back</string>
+    <string name="action_done">Done</string>
+    <string name="action_snooze">Snooze 1h</string>
+    <string name="action_call_now">Call</string>
+    <string name="add_note">Add note</string>
+    <string name="mark_done">Mark done</string>
+    <string name="delete">Delete</string>
+    <string name="followup_detail">Due %1$s · %2$s</string>
 </resources>

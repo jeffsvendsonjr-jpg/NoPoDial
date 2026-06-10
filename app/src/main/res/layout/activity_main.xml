@@ -1,84 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/tagline"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:layout_marginBottom="24dp" />
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/switch_enabled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/enable_protection"
-            android:layout_marginBottom="24dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_message"
-            android:textAppearance="?attr/textAppearanceTitleSmall" />
-
-        <EditText
-            android:id="@+id/input_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine|textCapSentences"
-            android:minLines="2"
-            android:hint="@string/default_apology"
-            android:autofillHints=""
-            android:layout_marginBottom="16dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_threshold"
-            android:textAppearance="?attr/textAppearanceTitleSmall" />
-
-        <EditText
-            android:id="@+id/input_threshold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:autofillHints=""
-            android:layout_marginBottom="16dp" />
-
-        <Button
-            android:id="@+id/button_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/save_settings"
-            android:layout_marginBottom="24dp" />
-
-        <TextView
-            android:id="@+id/text_permission_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/permissions_missing"
-            android:layout_marginBottom="8dp" />
-
-        <Button
-            android:id="@+id/button_permissions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?attr/materialButtonOutlinedStyle"
-            android:text="@string/grant_permissions" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/battery_note"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:layout_marginTop="24dp" />
-    </LinearLayout>
-</ScrollView>
+        app:menu="@menu/bottom_nav" />
+</LinearLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_recents"
+        android:icon="@drawable/ic_recents"
+        android:title="@string/nav_recents" />
+    <item
+        android:id="@+id/nav_contacts"
+        android:icon="@drawable/ic_contacts"
+        android:title="@string/nav_contacts" />
+    <item
+        android:id="@+id/nav_dialpad"
+        android:icon="@drawable/ic_dialpad"
+        android:title="@string/nav_dialpad" />
+    <item
+        android:id="@+id/nav_followups"
+        android:icon="@drawable/ic_followups"
+        android:title="@string/nav_followups" />
+</menu>

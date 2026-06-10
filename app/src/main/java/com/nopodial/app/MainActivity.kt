@@ -1,115 +1,86 @@
 package com.nopodial.app
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.materialswitch.MaterialSwitch
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.nopodial.app.ui.ContactsFragment
+import com.nopodial.app.ui.DialpadFragment
+import com.nopodial.app.ui.FollowUpsFragment
+import com.nopodial.app.ui.RecentsFragment
 
+/**
+ * The journal shell: Recents / Contacts / Dialpad / Follow-ups behind a
+ * bottom nav. Pocket-dial protection (the original feature) lives in
+ * Settings, reachable from the action bar.
+ */
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var enabledSwitch: MaterialSwitch
-    private lateinit var messageInput: EditText
-    private lateinit var thresholdInput: EditText
-    private lateinit var permissionStatus: TextView
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            refreshPermissionStatus()
+            // Fragments re-query in onResume; nothing to do here.
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        enabledSwitch = findViewById(R.id.switch_enabled)
-        messageInput = findViewById(R.id.input_message)
-        thresholdInput = findViewById(R.id.input_threshold)
-        permissionStatus = findViewById(R.id.text_permission_status)
-
-        enabledSwitch.isChecked = Prefs.isEnabled(this)
-        messageInput.setText(Prefs.message(this))
-        thresholdInput.setText(Prefs.maxDurationSec(this).toString())
-
-        enabledSwitch.setOnCheckedChangeListener { _, checked ->
-            if (checked && !allPermissionsGranted()) {
-                enabledSwitch.isChecked = false
-                requestNeededPermissions()
-                Toast.makeText(this, R.string.grant_permissions_first, Toast.LENGTH_LONG).show()
-                return@setOnCheckedChangeListener
+        val nav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        nav.setOnItemSelectedListener { item ->
+            val fragment: Fragment = when (item.itemId) {
+                R.id.nav_contacts -> ContactsFragment()
+                R.id.nav_dialpad -> DialpadFragment()
+                R.id.nav_followups -> FollowUpsFragment()
+                else -> RecentsFragment()
             }
-            Prefs.get(this).edit().putBoolean(Prefs.KEY_ENABLED, checked).apply()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+            true
+        }
+        if (savedInstanceState == null) {
+            nav.selectedItemId = R.id.nav_recents
         }
 
-        findViewById<Button>(R.id.button_save).setOnClickListener { saveSettings() }
-        findViewById<Button>(R.id.button_permissions).setOnClickListener {
-            requestNeededPermissions()
-        }
+        requestMissingPermissions()
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshPermissionStatus()
-    }
-
-    private fun saveSettings() {
-        val message = messageInput.text.toString().trim()
-        val threshold = thresholdInput.text.toString().toIntOrNull()
-
-        if (message.isEmpty()) {
-            messageInput.error = getString(R.string.error_empty_message)
-            return
-        }
-        if (threshold == null || threshold !in 1..120) {
-            thresholdInput.error = getString(R.string.error_bad_threshold)
-            return
-        }
-
-        Prefs.get(this).edit()
-            .putString(Prefs.KEY_MESSAGE, message)
-            .putInt(Prefs.KEY_MAX_DURATION_SEC, threshold)
-            .apply()
-        Toast.makeText(this, R.string.settings_saved, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun neededPermissions(): List<String> {
-        val perms = mutableListOf(
+    private fun requestMissingPermissions() {
+        val wanted = mutableListOf(
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.READ_CALL_LOG,
-            Manifest.permission.SEND_SMS
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.CALL_PHONE
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            perms.add(Manifest.permission.POST_NOTIFICATIONS)
+            wanted.add(Manifest.permission.POST_NOTIFICATIONS)
         }
-        return perms
-    }
-
-    private fun allPermissionsGranted(): Boolean =
-        neededPermissions()
-            .filter { it != Manifest.permission.POST_NOTIFICATIONS } // optional
-            .all {
-                ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-            }
-
-    private fun requestNeededPermissions() {
-        permissionLauncher.launch(neededPermissions().toTypedArray())
-    }
-
-    private fun refreshPermissionStatus() {
-        permissionStatus.setText(
-            if (allPermissionsGranted()) R.string.permissions_ok
-            else R.string.permissions_missing
-        )
-        if (!allPermissionsGranted() && enabledSwitch.isChecked) {
-            enabledSwitch.isChecked = false
-            Prefs.get(this).edit().putBoolean(Prefs.KEY_ENABLED, false).apply()
+        val missing = wanted.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (missing.isNotEmpty()) {
+            permissionLauncher.launch(missing.toTypedArray())
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == R.id.menu_settings) {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
 }

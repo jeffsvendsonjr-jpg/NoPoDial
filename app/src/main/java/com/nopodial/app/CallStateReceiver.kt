@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.telephony.TelephonyManager
 import android.util.Log
+import com.nopodial.app.journal.CallEndPrompt
 import kotlin.concurrent.thread
 
 /**
@@ -39,18 +40,16 @@ class CallStateReceiver : BroadcastReceiver() {
 
             TelephonyManager.EXTRA_STATE_OFFHOOK -> {
                 val incoming = prefs.getBoolean(Prefs.KEY_CALL_IS_INCOMING, false)
+                // Journal: every connected call gets a start timestamp so we
+                // can offer a note prompt at hang-up, incoming or outgoing.
+                prefs.edit().putLong(Prefs.KEY_CALL_START_MS, System.currentTimeMillis()).apply()
                 if (!incoming && Prefs.isEnabled(context)) {
                     onOutgoingCallStarted(context)
                 }
             }
 
             TelephonyManager.EXTRA_STATE_IDLE -> {
-                val startMs = prefs.getLong(Prefs.KEY_OUTGOING_START_MS, 0L)
-                if (startMs > 0L && Prefs.isEnabled(context)) {
-                    onOutgoingCallEnded(context, startMs)
-                } else {
-                    Prefs.clearCallSession(context)
-                }
+                onCallEnded(context)
             }
         }
     }
@@ -74,9 +73,17 @@ class CallStateReceiver : BroadcastReceiver() {
         }
     }
 
-    /** Call is over — decide whether it was a pocket dial and apologize if so. */
-    private fun onOutgoingCallEnded(context: Context, startMs: Long) {
+    /**
+     * Call is over. Two independent consumers of this moment:
+     * pocket-dial cleanup (outgoing + short + pocket evidence) and the
+     * journal's "add a note?" prompt (any connected call). A pocket dial
+     * gets the apology, not a note prompt — there's nothing to remember
+     * about a call your pocket made.
+     */
+    private fun onCallEnded(context: Context) {
         val prefs = Prefs.get(context)
+        val outgoingStartMs = prefs.getLong(Prefs.KEY_OUTGOING_START_MS, 0L)
+        val callStartMs = prefs.getLong(Prefs.KEY_CALL_START_MS, 0L)
         val evidence = PocketEvidence(
             screenWasOff = prefs.getBoolean(Prefs.KEY_SCREEN_WAS_OFF, false),
             deviceWasLocked = prefs.getBoolean(Prefs.KEY_DEVICE_WAS_LOCKED, false),
@@ -84,20 +91,39 @@ class CallStateReceiver : BroadcastReceiver() {
         )
         Prefs.clearCallSession(context)
 
-        val durationSec = (System.currentTimeMillis() - startMs) / 1000
-        val shortEnough = durationSec <= Prefs.maxDurationSec(context)
+        var pocketDial = false
+        if (outgoingStartMs > 0L && Prefs.isEnabled(context)) {
+            val durationSec = (System.currentTimeMillis() - outgoingStartMs) / 1000
+            pocketDial = durationSec <= Prefs.maxDurationSec(context) &&
+                evidence.looksLikePocketDial()
+            Log.d(TAG, "Outgoing call ended after ${durationSec}s, evidence=$evidence")
+        }
 
-        Log.d(TAG, "Outgoing call ended after ${durationSec}s, evidence=$evidence")
-        if (!shortEnough || !evidence.looksLikePocketDial()) return
+        when {
+            pocketDial -> {
+                val pending = goAsync()
+                thread(name = "nopodial-apology") {
+                    try {
+                        ApologySender.sendForLastOutgoingCall(context, outgoingStartMs)
+                    } catch (t: Throwable) {
+                        Log.e(TAG, "Failed to send apology", t)
+                    } finally {
+                        pending.finish()
+                    }
+                }
+            }
 
-        val pending = goAsync()
-        thread(name = "nopodial-apology") {
-            try {
-                ApologySender.sendForLastOutgoingCall(context, startMs)
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to send apology", t)
-            } finally {
-                pending.finish()
+            callStartMs > 0L && Prefs.notePromptEnabled(context) -> {
+                val pending = goAsync()
+                thread(name = "nopodial-note-prompt") {
+                    try {
+                        CallEndPrompt.showForEndedCall(context, callStartMs)
+                    } catch (t: Throwable) {
+                        Log.e(TAG, "Failed to show note prompt", t)
+                    } finally {
+                        pending.finish()
+                    }
+                }
             }
         }
     }

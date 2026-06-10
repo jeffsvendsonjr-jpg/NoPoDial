@@ -3,12 +3,20 @@
 
     <!-- Wake on call state changes (no polling, no foreground service). -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- Find the number that was just dialed, after the call ends. -->
+    <!-- Recents list, and finding the number that was just dialed/answered. -->
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
-    <!-- Fire the apology text. -->
+    <!-- Fire the pocket-dial apology text. -->
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <!-- Tell the user an apology was sent (Android 13+). -->
+    <!-- Call-note prompts, follow-up reminders, apology confirmations (Android 13+). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Contacts tab is a read-only view over the system contacts. -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Place calls straight from the dialpad (falls back to ACTION_DIAL). -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!-- Callback reminders fire on time, not whenever Doze feels like it. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- Reminders are rescheduled after a reboot. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Telephony is what the app is for, but it isn't required to install,
          so the UI can run on Wi-Fi-only tablets for development and demo. -->
@@ -30,6 +38,18 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".journal.NoteEditorActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.ContactDetailActivity"
+            android:exported="false" />
+
         <!-- Only fires on actual call state transitions; idle cost is zero. -->
         <receiver
             android:name=".CallStateReceiver"
@@ -37,6 +57,20 @@
             android:permission="android.permission.BROADCAST_PHONE_STATE">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Follow-up reminder alarms and their Done/Snooze actions. -->
+        <receiver
+            android:name=".journal.ReminderReceiver"
+            android:exported="false" />
+
+        <!-- Alarms don't survive reboot; this brings pending reminders back. -->
+        <receiver
+            android:name=".journal.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
     </application>
