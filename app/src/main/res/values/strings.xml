@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NoPoDial</string>
+    <string name="tagline">Pocket-dial protection with zero idle battery cost. NoPoDial sleeps until a call actually happens, then checks whether your phone dialed from a pocket and texts the other side so they don\'t call back.</string>
+    <string name="enable_protection">Pocket-dial protection</string>
+    <string name="label_message">Apology text to send</string>
+    <string name="default_apology">Sorry — that was an accidental pocket dial. Nothing\'s wrong, no need to call back!</string>
+    <string name="label_threshold">Max call length to treat as a pocket dial (seconds)</string>
+    <string name="save_settings">Save settings</string>
+    <string name="settings_saved">Saved</string>
+    <string name="error_empty_message">Message can\'t be empty</string>
+    <string name="error_bad_threshold">Enter 1–120 seconds</string>
+    <string name="grant_permissions">Grant permissions</string>
+    <string name="grant_permissions_first">Grant the required permissions first</string>
+    <string name="permissions_ok">✓ All required permissions granted</string>
+    <string name="permissions_missing">✗ Missing permissions: phone state, call log, and SMS are required</string>
+    <string name="battery_note">How it stays battery-friendly: there is no background service and no always-on sensor. Android wakes NoPoDial only when call state changes. The proximity sensor is read exactly once, at the instant a call starts, then released.</string>
+    <string name="notif_channel_name">Apologies sent</string>
+    <string name="notif_title">Pocket dial cleaned up</string>
+    <string name="notif_text">Apology SMS sent to %1$s</string>
+</resources>
