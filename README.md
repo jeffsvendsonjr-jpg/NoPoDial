@@ -11,6 +11,14 @@ it texts the person you accidentally called:
 
 No voicemail tag, no callback, no explaining.
 
+It also covers the more dangerous failure mode: **self-snitching**. Pocket-dial
+your boss mid-rant about work, or your partner while you're out doing the thing
+you said you weren't doing, and your pocket becomes an open mic happily
+incriminating you. NoPoDial can't unsay what your pocket already said, but the
+instant apology text stamps the whole thing as an accident *before* they call
+back to ask what exactly they just overheard — turning damning muffled audio
+into an obvious butt-dial nobody thinks twice about.
+
 ## Why it doesn't eat your battery
 
 Most "pocket mode" apps run a foreground service and listen to the proximity
