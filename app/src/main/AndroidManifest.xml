@@ -10,9 +10,9 @@
     <!-- Tell the user an apology was sent (Android 13+). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Proximity sensor is used one-shot at dial time; telephony not required
-         to install so the app can at least open on Wi-Fi tablets for demo. -->
-    <uses-feature android:name="android.hardware.telephony" android:required="true" />
+    <!-- Telephony is what the app is for, but it isn't required to install,
+         so the UI can run on Wi-Fi-only tablets for development and demo. -->
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
     <application
         android:allowBackup="true"
