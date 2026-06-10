@@ -1,6 +1,8 @@
 # NoPoDial
 
-Pocket-dial damage control for Android, with **zero idle battery cost**.
+**Prevent pocket dial pain, without any of the battery drain.**
+
+Pocket-dial damage control for Android, with zero idle battery cost.
 
 When your phone pocket-dials someone, the awkward part isn't the call — it's
 the callback. They see a missed call (or 15 seconds of muffled fabric audio)
